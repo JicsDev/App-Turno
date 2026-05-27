@@ -1,0 +1,425 @@
+
+        /* Variáveis de Cores para facilitar customização futura */
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --shift-day: #10b981;  /* Verde para turno diurno */
+            --shift-night: #3b82f6; /* Azul para turno noturno */
+        }
+
+        /* Reset Básico para "Cara de App" */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none; /* Evita que o usuário selecione o texto sem querer */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Cabeçalho Fixo */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Área Principal de Rolagem */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 80px; /* Espaço para não ficar atrás do Bottom Nav */
+        }
+
+        /* Resumo Rápido no topo da tela */
+/* Novo Card de Estatísticas (Abaixo do Calendário) */
+.stats-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 25px; /* Dá um espaço entre o calendário e o card */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6; /* Linha sutil separando os itens */
+}
+
+/* Tira a linha debaixo do último item da lista */
+.stat-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* O primeiro item (padding no topo não é necessário) */
+.stat-row:first-child {
+    padding-top: 0;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.stat-value {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Destaca especificamente a linha do "Valor estimado" */
+.stat-row.highlight .stat-label,
+.stat-row.highlight .stat-value {
+    color: var(--primary-color);
+    font-size: 1.15rem;
+    font-weight: bold;
+}
+
+        /* Estrutura do Calendário */
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            min-height: 70px;
+            padding: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-number {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Estilo das "Tags" de Turno no Calendário */
+        .shift-tag {
+            font-size: 0.7rem;
+            color: white;
+            padding: 3px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        .shift-day-tag { background-color: var(--shift-day); }
+        .shift-night-tag { background-color: var(--shift-night); }
+
+        /* Botão Flutuante (FAB) */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        /* Barra de Navegação Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        /* Alinhamento dos botões de navegação no cabeçalho */
+/* Controles de Navegação do Mês (agora no corpo do app) */
+.nav-mes-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* Dá um respiro antes de começar os dias da semana */
+    padding: 0 10px;
+}
+
+#nomeMesAno {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* Novo visual do botão: Redondo, fundo branco e seta na cor principal */
+.btn-nav {
+    background: var(--card-bg);
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%; /* Deixa o botão perfeitamente redondo */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra suave */
+    transition: background 0.2s;
+}
+
+/* Efeito visual ao tocar/clicar */
+.btn-nav:active {
+    background-color: #e5e7eb;
+}
+
+/* Efeito visual ao tocar/clicar no botão (bom para mobile) */
+.btn-nav:active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+/* --- Estilos do Modal (Janela Flutuante) --- */
+.modal-overlay {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo preto semi-transparente */
+    z-index: 200; /* Fica por cima de tudo */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.form-group select,
+.form-group input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9fafb;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.btn-cancelar,
+.btn-salvar {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 48%;
+}
+
+.btn-cancelar {
+    background-color: #e5e7eb;
+    color: var(--text-main);
+}
+
+.btn-salvar {
+    background-color: var(--primary-color);
+    color: white;
+}
+/* --- Cores dos Registros no Calendário --- */
+/* --- Cores de Fundo para o Quadro Inteiro do Dia --- */
+/* Adicionamos a cor do fundo e forçamos a letra do número a ficar branca para dar contraste */
+.calendar-day.bg-turno { background-color: #10b981; color: white; border: none; }
+.calendar-day.bg-folga { background-color: #3b82f6; color: white; border: none; }
+.calendar-day.bg-falta { background-color: #ef4444; color: white; border: none; }
+.calendar-day.bg-justificada { background-color: #f59e0b; color: white; border: none; }
+.calendar-day.bg-doente { background-color: #8b5cf6; color: white; border: none; }
+
+/* Adiciona um textinho sutil no fundo do quadro com o nome do registro */
+.nome-registro {
+    font-size: 0.65rem;
+    text-align: center;
+    margin-top: auto; /* Joga o texto para o final do quadradinho */
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.bg-turno { background-color: #10b981; } /* Verde */
+.bg-folga { background-color: #3b82f6; } /* Azul */
+.bg-falta { background-color: #ef4444; } /* Vermelho */
+.bg-justificada { background-color: #f59e0b; } /* Laranja */
+.bg-doente { background-color: #8b5cf6; } /* Roxo */
+/* --- Estilos do Botão de Excluir e Clique no Calendário --- */
+.calendar-day {
+    cursor: pointer; /* Transforma o mouse em uma mãozinha para indicar que é clicável */
+}
+
+/* Ajusta o espaço dos botões para caberem os três juntos */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-cancelar,
+.btn-excluir,
+.btn-salvar {
+    flex: 1; /* Faz os botões dividirem o espaço igualmente */
+    padding: 10px 5px; /* Reduzi o padding lateral para caberem textos em telas menores */
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-excluir {
+    background-color: #ef4444; /* Vermelho alerta */
+    color: white;
+}
+/* --- Estilos do Relatório --- */
+.relatorio-content {
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.relatorio-lista {
+    overflow-y: auto; /* Cria barra de rolagem se o relatório for longo */
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.linha-relatorio {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.linha-relatorio:last-child {
+    border-bottom: none;
+}
+
+.linha-relatorio.destaque {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 10px;
+    border-top: 2px solid #e5e7eb;
+    padding-top: 10px;
+}
+
+/* --- Regras para quando for Imprimir/Salvar em PDF --- */
+@media print {
+    body * {
+        visibility: hidden; /* Esconde o aplicativo inteiro */
+    }
+    #modalRelatorio, #modalRelatorio * {
+        visibility: visible; /* Mostra apenas o relatório */
+    }
+    #modalRelatorio {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white; /* Tira o fundo escuro */
+    }
+    .modal-content {
+        box-shadow: none; /* Tira as sombras para o PDF ficar limpo */
+        width: 100%;
+        max-width: 100%;
+    }
+    .no-print {
+        display: none !important; /* Esconde os botões Fechar e Salvar PDF do papel */
+    }
+}

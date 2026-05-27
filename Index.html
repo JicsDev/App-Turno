@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Turnos & Pagamentos</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+        <!-- Conectando o Manifest e a cor principal do navegador -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
+</head>
+<body>
+
+    <header>
+        <h1>Turnos & Pagamentos</h1>
+    </header>
+
+    <main>
+        <div class="nav-mes-container">
+            <button class="btn-nav" id="btnAnterior">&lt;</button>
+            <h2 id="nomeMesAno">Mês / Ano</h2>
+            <button class="btn-nav" id="btnProximo">&gt;</button>
+        </div>
+
+        <div class="calendar-header">
+            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid">
+            </div>
+
+        <div class="stats-card">
+            <div class="stat-row highlight">
+                <span class="stat-label">Valor estimado</span>
+                <span class="stat-value">R$ 0,00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Turnos Trabalhados</span>
+                <span class="stat-value">00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Folgas</span>
+                <span class="stat-value">00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Faltas</span>
+                <span class="stat-value">00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Faltas justificadas</span>
+                <span class="stat-value">00</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Doente</span>
+                <span class="stat-value">00</span>
+            </div>
+        </div>
+    </main>
+    
+<!--    <div class="fab" onclick="abrirModalTurno()">+</div> -->
+
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">📅</span>
+            <span>Calendário</span>
+        </div>
+        <div class="nav-item" onclick="abrirModalRelatorio()">
+            <span class="nav-icon">📊</span>
+            <span>Relatórios</span>
+        </div>
+      <div class="nav-item" onclick="abrirModalConfig()">
+            <span class="nav-icon">⚙️</span>
+            <span>Ajustes</span>
+        </div>
+    </div>
+    <div id="modalRegistro" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Adicionar ao Calendário</h3>
+            
+            <div class="form-group">
+                <label for="tipoRegistro">O que deseja registrar?</label>
+                <select id="tipoRegistro">
+                    <option value="turno">Turno Trabalhado</option>
+                    <option value="folga">Folga</option>
+                    <option value="falta">Falta</option>
+                    <option value="falta_justificada">Falta Justificada</option>
+                    <option value="doente">Doente (Atestado)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dataRegistro">Data do evento:</label>
+                <input type="date" id="dataRegistro">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-excluir" id="btnExcluir" onclick="apagarRegistro()" style="display: none;">Excluir</button>
+                <button class="btn-salvar" onclick="salvarRegistro()">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfig" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Configurações</h3>
+            
+            <div class="form-group">
+                <label for="valorTurnoConfig">Valor por Turno (R$):</label>
+                <input type="number" id="valorTurnoConfig" step="0.01" placeholder="Ex: 150.00">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModalConfig()">Cancelar</button>
+                <button class="btn-salvar" onclick="salvarConfig()">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalRelatorio" class="modal-overlay">
+        <div class="modal-content relatorio-content">
+            <h3 id="tituloRelatorio">Relatório do Mês</h3>
+            
+            <div id="conteudoRelatorio" class="relatorio-lista">
+                </div>
+
+            <div class="modal-buttons no-print">
+                <button class="btn-cancelar" onclick="fecharModalRelatorio()">Fechar</button>
+                <button class="btn-salvar" onclick="imprimirRelatorio()">Salvar PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <!-- Registrando o Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado!', reg))
+                    .catch(err => console.log('Erro no Service Worker', err));
+            });
+        }
+    </script>
+
+</body>
+</html>
